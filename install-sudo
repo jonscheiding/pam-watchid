@@ -1,0 +1,16 @@
+#!/bin/bash
+
+SUDO_FILE=/private/etc/pam.d/sudo
+
+if [ -f /etc/pam.d/sudo_local ]; then
+  SUDO_FILE=/private/etc/pam.d/sudo_local;
+fi
+
+if grep "pam_watchid" $SUDO_FILE > /dev/null; then
+  echo "Already configured for sudo."
+  exit
+fi
+
+sed '2i\
+auth       sufficient     pam_watchid.so
+' $SUDO_FILE
